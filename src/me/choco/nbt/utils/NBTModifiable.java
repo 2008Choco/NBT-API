@@ -13,6 +13,8 @@ public interface NBTModifiable<T> {
 	 *   - NBTBase TODO
 	 */
 	
+	public boolean isSupported();
+	
 	public T removeKey(String key);
 	
 	public boolean hasKey(String key);

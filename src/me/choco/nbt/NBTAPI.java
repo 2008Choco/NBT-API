@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.choco.nbt.types.NBTItem;
 import me.choco.nbt.utils.NBTModifiable;
+import me.choco.nbt.utils.ReflectionUtils;
 
 public class NBTAPI extends JavaPlugin {
 	
@@ -16,6 +17,8 @@ public class NBTAPI extends JavaPlugin {
 		this.getLogger().info("Retrieving Bukkit version information");
 		bukkitVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 		this.getLogger().info("Bukkit implementation " + this.bukkitVersion);
+		
+		ReflectionUtils.loadNMSClasses();
 	}
 	
 	public String getBukkitVersion() {
@@ -23,6 +26,10 @@ public class NBTAPI extends JavaPlugin {
 	}
 	
 	public static NBTModifiable<ItemStack> getNBTItem(ItemStack item) {
-		return new NBTItem(item);
+		NBTItem nbtItem = new NBTItem(item);
+		if (nbtItem.isSupported())
+			throw new UnsupportedOperationException("There was an issue retrieving an NBTModifiable ItemStack");
+		
+		return nbtItem;
 	}
 }
