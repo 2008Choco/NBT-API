@@ -5,5 +5,5 @@ description: A library to assist developers in modifying custom NBT data for Ite
 author: 2008Choco
 commands:
     itemnbt:
-      description: Test the NBT API
-      usage: /<command>
+      description: A method to modify item NBT data
+      usage: /<command> <set|remove|check>

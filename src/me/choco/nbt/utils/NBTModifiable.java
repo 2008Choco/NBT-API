@@ -20,6 +20,10 @@ public interface NBTModifiable {
 	 *   - NBTBase TODO
 	 */
 	
+	/* TODO: #get() and #set() methods for NBTBase will allow for unknown object values. i.e. #getValue() returns Object
+	 * Doing this will simplify the ItemNBT command, as checking for valid types will not be required
+	 */
+	
 	/**
 	 * Whether the implementation is supported or not. If this
 	 * value returns false, methods may be unusable or unstable
