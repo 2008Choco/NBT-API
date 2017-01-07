@@ -12,8 +12,22 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.choco.nbt.types.NBTItem;
 import me.choco.nbt.utils.ReflectionUtils;
 
+/**
+ * An extensive NBT library to allow for easy custom modifications to
+ * existing ItemStack, Entity and TileEntity objects. NBT data is managed
+ * by the server, and this API is meant to interface with it and simplify
+ * accessing net.minecraft.server methods.
+ * <br>
+ * <br> This library uses reflection, and will hardly require updates - if
+ * any at all. The goal of this plugin is to allow for interaction with custom
+ * NBT data, yet simultaneously maintain high performance.
+ * 
+ * @author Parker Hawke - 2008Choco
+ * @author Contributor - iso2013
+ */
 public class NBTAPI extends JavaPlugin {
 	
+	// Bukkit implementation, (ex: 1_11_R1)
 	private String bukkitVersion;
 	
 	@Override
@@ -25,10 +39,21 @@ public class NBTAPI extends JavaPlugin {
 		ReflectionUtils.loadNMSClasses(this.bukkitVersion);
 	}
 	
+	/**
+	 * Get the Bukkit implementation version for the current server (i.e. 1_11_R1)
+	 * 
+	 * @return Bukkit implementation version
+	 */
 	public String getBukkitVersion() {
 		return bukkitVersion;
 	}
 	
+	/**
+	 * Get the NBT modifiable equivalent of an ItemStack
+	 * 
+	 * @param item - The item to modify
+	 * @return a modifiable item stack
+	 */
 	public static NBTItem getNBTItem(ItemStack item) {
 		NBTItem nbtItem = new NBTItem(item);
 		if (!nbtItem.isSupported())

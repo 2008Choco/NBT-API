@@ -11,11 +11,21 @@ import com.google.common.base.Preconditions;
 
 import me.choco.nbt.utils.NBTModifiable;
 
+/**
+ * An ItemStack object with modifiable NBT data
+ * 
+ * @author Parker Hawke - 2008Choco
+ */
 public class NBTItem implements NBTModifiable {
 	
 	private final ItemStack item;
 	private final Object nmsItem;
 	
+	/**
+	 * Create a new instance of an ItemStack with modifiable NBT data
+	 * 
+	 * @param item - The Bukkit ItemStack
+	 */
 	public NBTItem(ItemStack item) {
 		Preconditions.checkNotNull(item, "Cannot modify the NBT of a null ItemStack");
 		
@@ -23,10 +33,11 @@ public class NBTItem implements NBTModifiable {
 		this.nmsItem = getNMSItemStack(item);
 	}
 	
-	public ItemStack getItem() {
-		return item;
-	}
-	
+	/**
+	 * Get the resulting ItemStack with the modified NBT data
+	 * 
+	 * @return the ItemStack with NBT data
+	 */
 	public ItemStack getModifiedItemStack() {
 		ItemStack modifiedItem = getBukkitItemStack(nmsItem);
 		return modifiedItem != null ? modifiedItem : item;
@@ -170,6 +181,13 @@ public class NBTItem implements NBTModifiable {
 		return this.getNBTValue(methodGetBoolean, key, Boolean.class, false);
 	}
 	
+	/**
+	 * Set a value in the item's NBT structure
+	 * 
+	 * @param method - The reflected method to call. Should be a set method
+	 * @param key - The key to set
+	 * @param value - The value to set
+	 */
 	private <T> void setNBTValue(Method method, String key, T value) {
 		try {
 			Object nbt = methodGetTag.invoke(nmsItem);
@@ -180,6 +198,15 @@ public class NBTItem implements NBTModifiable {
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) { e.printStackTrace(); }
 	}
 	
+	/**
+	 * Get a value in the item's NBT structure
+	 * 
+	 * @param method - The reflected method to call. Should be a get method
+	 * @param key - The key to get
+	 * @param returnType - The type of object that will be returned
+	 * @param defaultValue - The default value to return if no value was present
+	 * @return the value of the key, or the default value if not found
+	 */
 	private <T> T getNBTValue(Method method, String key, Class<T> returnType, T defaultValue) {
 		try {
 			Object nmsItem = methodAsNMSCopy.invoke(null, item);

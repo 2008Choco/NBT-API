@@ -7,6 +7,13 @@ import org.bukkit.inventory.ItemStack;
 
 import com.google.common.base.Preconditions;
 
+/**
+ * General reflection utilities to simplify reflection calls in 
+ * other classes and to store Method & Class objects in fields 
+ * in order to alleviate performance drops
+ * 
+ * @author Parker Hawke - 2008Choco
+ */
 public class ReflectionUtils {
 
 	private static String version;
@@ -38,6 +45,12 @@ public class ReflectionUtils {
 	public static Method methodAsNMSCopy;
 	public static Method methodAsCraftMirror;
 	
+	/**
+	 * Get a net.minecraft.server.ItemStack object from a Bukkit {@link ItemStack} object
+	 * 
+	 * @param item - The Bukkit ItemStack to convert
+	 * @return the nms.ItemStack object
+	 */
 	public static Object getNMSItemStack(ItemStack item) {
 		Preconditions.checkNotNull(item, "ItemStack cannot be null");
 		
@@ -48,6 +61,12 @@ public class ReflectionUtils {
 		}
 	}
 	
+	/**
+	 * Get a Bukkit {@link ItemStack} object from a net.minecraft.server.ItemStack object
+	 * 
+	 * @param nmsItem - The nms.ItemStack object
+	 * @return the Bukkit ItemStack object
+	 */
 	public static ItemStack getBukkitItemStack(Object nmsItem) {
 		Preconditions.checkNotNull(nmsItem, "ItemStack cannot be null");
 		
@@ -58,6 +77,12 @@ public class ReflectionUtils {
 		}
 	}
 	
+	/**
+	 * Generate a new net.minecraft.server.NBTTagCompound object, the base of
+	 * all NBT structures
+	 * 
+	 * @return an empty NBTTagCompound
+	 */
 	public static Object newNBTTagCompound() {
 		try {
 			return classNBTTagCompound.newInstance();
@@ -66,6 +91,12 @@ public class ReflectionUtils {
 		}
 	}
 	
+	/**
+	 * Generate a new net.minecraft.server.NBTTagList object, an array of
+	 * objects in NBT structures
+	 * 
+	 * @return an empty NBTTagList
+	 */
 	public static Object newNBTTagList() {
 		try {
 			return classNBTTagList.newInstance();
@@ -74,6 +105,11 @@ public class ReflectionUtils {
 		}
 	}
 	
+	/**
+	 * Load all required classes and methods
+	 * 
+	 * @param version - Bukkit implementation version
+	 */
 	public static void loadNMSClasses(String version) {
 		if (classCraftItemStack != null) return;
 		
@@ -113,6 +149,14 @@ public class ReflectionUtils {
 		methodAsCraftMirror = getMethod("asCraftMirror", classCraftItemStack, classNMSItemStack);
 	}
 	
+	/**
+	 * Get a method from a specific class
+	 * 
+	 * @param name - The name of the method
+	 * @param clazz - The class in which the method is located
+	 * @param paramTypes - The parameter types accepted by this method
+	 * @return an instance of the method, or null if not found
+	 */
 	private static Method getMethod(String name, Class<?> clazz, Class<?>... paramTypes) {
 		try {
 			return clazz.getMethod(name, paramTypes);
@@ -122,6 +166,12 @@ public class ReflectionUtils {
 		return null;
 	}
 	
+	/**
+	 * Get a class object from the net.minecraft.server package
+	 * 
+	 * @param className - The name of the class
+	 * @return the NMS class object, or null if not found
+	 */
     private static Class<?> getNMSClass(String className) {
         try {
         	return Class.forName("net.minecraft.server." + version + className);
@@ -131,6 +181,12 @@ public class ReflectionUtils {
         return null;
     }
     
+	/**
+	 * Get a class object from the org.bukkit.craftbukkit package
+	 * 
+	 * @param className - The name of the class
+	 * @return the CraftBukkit class object, or null if not found
+	 */
     private static Class<?> getCBClass(String className) {
         try {
         	return Class.forName("org.bukkit.craftbukkit." + version + className);
