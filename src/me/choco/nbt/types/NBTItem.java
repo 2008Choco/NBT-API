@@ -3,6 +3,7 @@ package me.choco.nbt.types;
 import static me.choco.nbt.utils.ReflectionUtils.*;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import org.bukkit.inventory.ItemStack;
 
@@ -10,7 +11,7 @@ import com.google.common.base.Preconditions;
 
 import me.choco.nbt.utils.NBTModifiable;
 
-public class NBTItem implements NBTModifiable<ItemStack> {
+public class NBTItem implements NBTModifiable {
 	
 	private final ItemStack item;
 	private final Object nmsItem;
@@ -25,6 +26,11 @@ public class NBTItem implements NBTModifiable<ItemStack> {
 	public ItemStack getItem() {
 		return item;
 	}
+	
+	public ItemStack getModifiedItemStack() {
+		ItemStack modifiedItem = getBukkitItemStack(nmsItem);
+		return modifiedItem != null ? modifiedItem : item;
+	}
 
 	@Override
 	public boolean isSupported() {
@@ -32,17 +38,17 @@ public class NBTItem implements NBTModifiable<ItemStack> {
 	}
 
 	@Override
-	public ItemStack removeKey(String key) {
+	public NBTItem removeKey(String key) {
 		Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
 		
 		try {
 			Object nbt = methodGetTag.invoke(nmsItem);
-			if (nbt == null) return item;
+			if (nbt == null) return this;
 			
 			methodRemove.invoke(nbt, key);
 			methodSetTag.invoke(nmsItem, nbt);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) { e.printStackTrace(); }
-		return item;
+		return this;
 	}
 
 	@Override
@@ -61,118 +67,127 @@ public class NBTItem implements NBTModifiable<ItemStack> {
 	}
 
 	@Override
-	public ItemStack setString(String key, String value) {
+	public NBTItem setString(String key, String value) {
 		Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
-		
-		try {
-			Object nbt = methodGetTag.invoke(nmsItem);
-			if (nbt == null) nbt = newNBTTagCompound();
-			
-			methodSetString.invoke(nbt, key, value);
-			methodSetTag.invoke(nmsItem, nbt);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) { e.printStackTrace(); }
-		
-		return item;
+		this.setNBTValue(methodSetString, key, value);
+		return this;
 	}
 
 	@Override
 	public String getString(String key) {
 		if (key == null) return "";
-		String result = null;
-		
-		try {
-			Object nmsItem = methodAsNMSCopy.invoke(null, item);
-			Object nbt = methodGetTag.invoke(nmsItem);
-			if (nbt == null) return "";
-			
-			result = (String) methodGetString.invoke(nbt, key);
-		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) { e.printStackTrace(); }
-		
-		return result;
+		return this.getNBTValue(methodGetString, key, String.class, "");
 	}
 
 	@Override
-	public ItemStack setInt(String key, int value) {
+	public NBTItem setInt(String key, int value) {
 		Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
-		
-		return item;
+		this.setNBTValue(methodSetInt, key, value);
+		return this;
 	}
 
 	@Override
-	public int getInt(String key, int value) {
-		Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
-		
-		return 0;
+	public int getInt(String key) {
+		if (key == null) return -1;
+		return this.getNBTValue(methodGetInt, key, Integer.class, -1);
 	}
 
 	@Override
-	public ItemStack setDouble(String key, double value) {
+	public NBTItem setDouble(String key, double value) {
 		Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
-		
-		return item;
+		this.setNBTValue(methodSetDouble, key, value);
+		return this;
 	}
 
 	@Override
 	public double getDouble(String key) {
-		Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
-		
-		return 0;
+		if (key == null) return -1;
+		return this.getNBTValue(methodGetDouble, key, Double.class, -1d);
 	}
 
 	@Override
-	public ItemStack setFloat(String key, float value) {
+	public NBTItem setFloat(String key, float value) {
 		Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
-		
-		return item;
+		this.setNBTValue(methodSetFloat, key, value);
+		return this;
 	}
 
 	@Override
 	public float getFloat(String key) {
-		Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
-		
-		return 0;
+		if (key == null) return -1;
+		return this.getNBTValue(methodGetFloat, key, Float.class, -1f);
 	}
 
 	@Override
-	public ItemStack setShort(String key, short value) {
+	public NBTItem setShort(String key, short value) {
 		Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
-		
-		return item;
+		this.setNBTValue(methodSetShort, key, value);
+		return this;
 	}
 
 	@Override
 	public short getShort(String key) {
-		Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
-		
-		return 0;
+		if (key == null) return -1;
+		return this.getNBTValue(methodGetShort, key, Short.class, (short) -1);
 	}
 
 	@Override
-	public ItemStack setLong(String key, long value) {
+	public NBTItem setLong(String key, long value) {
 		Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
-		
-		return item;
+		this.setNBTValue(methodSetLong, key, value);
+		return this;
 	}
 
 	@Override
 	public long getLong(String key) {
-		Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
-		
-		return 0;
+		if (key == null) return -1;
+		return this.getNBTValue(methodGetLong, key, Long.class, -1l);
 	}
 
 	@Override
-	public ItemStack setByte(String key, byte value) {
+	public NBTItem setByte(String key, byte value) {
 		Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
-		
-		return item;
+		this.setNBTValue(methodSetByte, key, value);
+		return this;
 	}
 
 	@Override
 	public byte getByte(String key) {
-		Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
-		
-		return 0;
+		if (key == null) return -1;
+		return this.getNBTValue(methodGetByte, key, Byte.class, (byte) -1);
 	}
 
+	@Override
+	public NBTItem setBoolean(String key, boolean value) {
+		Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+		this.setNBTValue(methodSetBoolean, key, value);
+		return this;
+	}
+
+	@Override
+	public boolean getBoolean(String key) {
+		if (key == null) return false;
+		return this.getNBTValue(methodGetBoolean, key, Boolean.class, false);
+	}
+	
+	private <T> void setNBTValue(Method method, String key, T value) {
+		try {
+			Object nbt = methodGetTag.invoke(nmsItem);
+			if (nbt == null) nbt = newNBTTagCompound();
+			
+			method.invoke(nbt, key, value);
+			methodSetTag.invoke(nmsItem, nbt);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) { e.printStackTrace(); }
+	}
+	
+	private <T> T getNBTValue(Method method, String key, Class<T> returnType, T defaultValue) {
+		try {
+			Object nmsItem = methodAsNMSCopy.invoke(null, item);
+			Object nbt = methodGetTag.invoke(nmsItem);
+			if (nbt == null) return defaultValue;
+			
+			return returnType.cast(method.invoke(nbt, key));
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) { e.printStackTrace(); }
+		return defaultValue;
+	}
 }
