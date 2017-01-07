@@ -1,11 +1,11 @@
 package me.choco.nbt.utils;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
+import com.google.common.base.Preconditions;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
-import com.google.common.base.Preconditions;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * General reflection utilities to simplify reflection calls in 
@@ -34,16 +34,21 @@ public class ReflectionUtils {
 	public static Method methodGetList;
 	
 	public static Class<?> classNBTTagList;
-	public static Method methodAdd;
-	public static Method methodGet;
-	public static Method methodSize;
+	public static Method methodAdd, methodGet, methodSize;
 	
 	public static Class<?> classNMSItemStack;
-	public static Method methodSetTag, methodGetTag;
+	public static Method methodItemStackSetTag, methodItemStackGetTag;
+
+	public static Class<?> classNMSEntity;
+	public static Method methodEntitySetTag, methodEntityGetTag;
 	
 	public static Class<?> classCraftItemStack;
-	public static Method methodAsNMSCopy;
-	public static Method methodAsCraftMirror;
+	public static Method methodItemStackAsNMSCopy;
+	public static Method methodItemStackAsCraftMirror;
+
+	public static Class<?> classCraftEntity;
+	public static Method methodEntityAsNMSCopy;
+	public static Method methodEntityAsCraftMirror;
 	
 	/**
 	 * Get a net.minecraft.server.ItemStack object from a Bukkit {@link ItemStack} object
@@ -55,7 +60,17 @@ public class ReflectionUtils {
 		Preconditions.checkNotNull(item, "ItemStack cannot be null");
 		
 		try {
-			return methodAsNMSCopy.invoke(null, item);
+			return methodItemStackAsNMSCopy.invoke(null, item);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			return null;
+		}
+	}
+
+	public static Object getNMSEntity(Entity entity){
+		Preconditions.checkNotNull(entity, "Entity cannot be null");
+
+		try {
+			return methodEntityAsNMSCopy.invoke(null, entity);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			return null;
 		}
@@ -71,7 +86,17 @@ public class ReflectionUtils {
 		Preconditions.checkNotNull(nmsItem, "ItemStack cannot be null");
 		
 		try {
-			return (ItemStack) methodAsCraftMirror.invoke(null, nmsItem);
+			return (ItemStack) methodItemStackAsCraftMirror.invoke(null, nmsItem);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			return null;
+		}
+	}
+
+	public static Entity getBukkitEntity(Object nmsEntity){
+		Preconditions.checkNotNull(nmsEntity, "Entity cannot be null");
+
+		try {
+			return (Entity) methodEntityAsCraftMirror.invoke(null, nmsEntity);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			return null;
 		}
@@ -142,11 +167,17 @@ public class ReflectionUtils {
 		methodGet = getMethod("get", classNBTTagList, Integer.TYPE);
 		methodSize = getMethod("size", classNBTTagList);
 		classNMSItemStack = getNMSClass("ItemStack");
-		methodSetTag = getMethod("setTag", classNMSItemStack, classNBTTagCompound);
-		methodGetTag = getMethod("getTag", classNMSItemStack);
+		methodItemStackSetTag = getMethod("setTag", classNMSItemStack, classNBTTagCompound);
+		methodItemStackGetTag = getMethod("getTag", classNMSItemStack);
+		classNMSEntity = getNMSClass("Entity");
+		methodEntitySetTag = getMethod("f", classNMSEntity, classNBTTagCompound);
+		methodEntityGetTag = getMethod("e", classNMSEntity, classNBTTagCompound);
 		classCraftItemStack = getCBClass("inventory.CraftItemStack");
-		methodAsNMSCopy = getMethod("asNMSCopy", classCraftItemStack, ItemStack.class);
-		methodAsCraftMirror = getMethod("asCraftMirror", classCraftItemStack, classNMSItemStack);
+		methodItemStackAsNMSCopy = getMethod("asNMSCopy", classCraftItemStack, ItemStack.class);
+		methodItemStackAsCraftMirror = getMethod("asCraftMirror", classCraftItemStack, classNMSItemStack);
+		classCraftEntity = getCBClass("entity.CraftEntity");
+		methodEntityAsNMSCopy = getMethod("getHandle", classCraftEntity);
+		methodEntityAsCraftMirror = getMethod("getBukkitEntity", classCraftEntity);
 	}
 	
 	/**

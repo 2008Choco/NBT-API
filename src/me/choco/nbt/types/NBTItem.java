@@ -1,15 +1,13 @@
 package me.choco.nbt.types;
 
-import static me.choco.nbt.utils.ReflectionUtils.*;
+import com.google.common.base.Preconditions;
+import me.choco.nbt.utils.NBTModifiable;
+import org.bukkit.inventory.ItemStack;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.bukkit.inventory.ItemStack;
-
-import com.google.common.base.Preconditions;
-
-import me.choco.nbt.utils.NBTModifiable;
+import static me.choco.nbt.utils.ReflectionUtils.*;
 
 /**
  * An ItemStack object with modifiable NBT data
@@ -53,11 +51,11 @@ public class NBTItem implements NBTModifiable {
 		Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
 		
 		try {
-			Object nbt = methodGetTag.invoke(nmsItem);
+			Object nbt = methodItemStackGetTag.invoke(nmsItem);
 			if (nbt == null) return this;
 			
 			methodRemove.invoke(nbt, key);
-			methodSetTag.invoke(nmsItem, nbt);
+			methodItemStackSetTag.invoke(nmsItem, nbt);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) { e.printStackTrace(); }
 		return this;
 	}
@@ -68,7 +66,7 @@ public class NBTItem implements NBTModifiable {
 		boolean hasTag = false;
 		
 		try {
-			Object nbt = methodGetTag.invoke(nmsItem);
+			Object nbt = methodItemStackGetTag.invoke(nmsItem);
 			if (nbt == null) return false;
 			
 			hasTag = (boolean) methodHasKey.invoke(nbt, key);
@@ -190,11 +188,11 @@ public class NBTItem implements NBTModifiable {
 	 */
 	private <T> void setNBTValue(Method method, String key, T value) {
 		try {
-			Object nbt = methodGetTag.invoke(nmsItem);
+			Object nbt = methodItemStackGetTag.invoke(nmsItem);
 			if (nbt == null) nbt = newNBTTagCompound();
 			
 			method.invoke(nbt, key, value);
-			methodSetTag.invoke(nmsItem, nbt);
+			methodItemStackSetTag.invoke(nmsItem, nbt);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) { e.printStackTrace(); }
 	}
 	
@@ -209,8 +207,8 @@ public class NBTItem implements NBTModifiable {
 	 */
 	private <T> T getNBTValue(Method method, String key, Class<T> returnType, T defaultValue) {
 		try {
-			Object nmsItem = methodAsNMSCopy.invoke(null, item);
-			Object nbt = methodGetTag.invoke(nmsItem);
+			Object nmsItem = methodItemStackAsNMSCopy.invoke(null, item);
+			Object nbt = methodItemStackGetTag.invoke(nmsItem);
 			if (nbt == null) return defaultValue;
 			
 			return returnType.cast(method.invoke(nbt, key));
