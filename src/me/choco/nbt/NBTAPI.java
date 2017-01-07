@@ -5,10 +5,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.choco.nbt.types.NBTEntity;
 import me.choco.nbt.types.NBTItem;
 import me.choco.nbt.utils.ReflectionUtils;
 
@@ -60,6 +62,20 @@ public class NBTAPI extends JavaPlugin {
 			throw new UnsupportedOperationException("There was an issue retrieving an NBTModifiable ItemStack");
 		
 		return nbtItem;
+	}
+	
+	/**
+	 * Get the NBT modifiable equivalent of an Entity
+	 * 
+	 * @param entity - The entity to modify
+	 * @return a modifiable entity
+	 */
+	public static NBTEntity getNBTEntity(Entity entity) {
+		NBTEntity nbtEntity = new NBTEntity(entity);
+		if (!nbtEntity.isSupported())
+			throw new UnsupportedOperationException("There was an issue retrieving an NBTModifiable Entity");
+		
+		return nbtEntity;
 	}
 	
 	@Override

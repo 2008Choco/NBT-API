@@ -18,6 +18,7 @@ public class ReflectionUtils {
 
 	private static String version;
 	
+	// NBTTagCompound-related Classes & Methods
 	public static Class<?> classNBTBase;
 	public static Class<?> classNBTTagCompound;
 	public static Method methodSetString, methodGetString;
@@ -36,16 +37,20 @@ public class ReflectionUtils {
 	public static Class<?> classNBTTagList;
 	public static Method methodAdd, methodGet, methodSize;
 	
+	// net.minecraft.server.ItemStack Class & Methods
 	public static Class<?> classNMSItemStack;
 	public static Method methodItemStackSetTag, methodItemStackGetTag;
 
+	// net.minecraft.server.Entity Class & Methods
 	public static Class<?> classNMSEntity;
 	public static Method methodEntitySetTag, methodEntityGetTag;
 	
+	// org.bukkit.craftbukkit.inventory.ItemStack Class & Methods
 	public static Class<?> classCraftItemStack;
 	public static Method methodItemStackAsNMSCopy;
 	public static Method methodItemStackAsCraftMirror;
 
+	// org.bukkit.craftbukkit.entity.Entity Class & Methods
 	public static Class<?> classCraftEntity;
 	public static Method methodEntityAsNMSCopy;
 	public static Method methodEntityAsCraftMirror;
@@ -66,6 +71,12 @@ public class ReflectionUtils {
 		}
 	}
 
+	/**
+	 * Get a net.minecraft.server.Entity object from a Bukkit {@link Entity} object
+	 * 
+	 * @param entity - The Bukkit Entity to convert
+	 * @return the nms.Entity object
+	 */
 	public static Object getNMSEntity(Entity entity){
 		Preconditions.checkNotNull(entity, "Entity cannot be null");
 
@@ -92,6 +103,12 @@ public class ReflectionUtils {
 		}
 	}
 
+	/**
+	 * Get a Bukkit {@link Entity} object from a net.minecraft.server.Entity object
+	 * 
+	 * @param nmsEntity - The nms.Entity object
+	 * @return the Bukkit Entity object
+	 */
 	public static Entity getBukkitEntity(Object nmsEntity){
 		Preconditions.checkNotNull(nmsEntity, "Entity cannot be null");
 

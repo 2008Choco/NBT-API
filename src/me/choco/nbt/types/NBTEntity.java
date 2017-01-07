@@ -7,23 +7,26 @@ import org.bukkit.entity.Entity;
 import static me.choco.nbt.utils.ReflectionUtils.getNMSEntity;
 
 /**
+ * An Entity object with modifiable NBT data
+ * 
  * @author iso2013
  */
 public class NBTEntity implements NBTModifiable {
-    private final Entity entity;
+	
+    @SuppressWarnings("unused") // TEMP
+	private final Entity entity;
     private final Object nmsEntity;
 
     public NBTEntity(Entity entity) {
-        Preconditions.checkNotNull(entity, "Cannot modify the NBT of a null ItemStack");
+        Preconditions.checkNotNull(entity, "Cannot modify the NBT of a null Entity");
 
         this.entity = entity;
         this.nmsEntity = getNMSEntity(entity);
     }
 
-
     @Override
     public boolean isSupported() {
-        return false;
+        return nmsEntity != null;
     }
 
     @Override
