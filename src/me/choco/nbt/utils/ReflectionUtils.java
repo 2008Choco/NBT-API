@@ -1,11 +1,13 @@
 package me.choco.nbt.utils;
 
-import com.google.common.base.Preconditions;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import com.google.common.base.Preconditions;
 
 /**
  * General reflection utilities to simplify reflection calls in 
@@ -45,15 +47,31 @@ public class ReflectionUtils {
 	public static Class<?> classNMSEntity;
 	public static Method methodEntitySetTag, methodEntityGetTag;
 	
-	// org.bukkit.craftbukkit.inventory.ItemStack Class & Methods
+	// net.minecraft.server.TileEntity Class & Methods
+	public static Class<?> classNMSTileEntity;
+	public static Method methodTileEntitySetTag, methodTileEntityGetTag;
+	public static Method methodTileEntityGetWorld, methodTileEntityGetPosition;
+	
+	// net.minecraft.server.BlockPosition Class & Methods
+	public static Class<?> classBlockPosition;
+	public static Method methodBlockPositionGetX, methodBlockPositionGetY, methodBlockPositionGetZ;
+	
+	public static Class<?> classWorld;
+	
+	// org.bukkit.craftbukkit.inventory.CraftItemStack Class & Methods
 	public static Class<?> classCraftItemStack;
 	public static Method methodItemStackAsNMSCopy;
 	public static Method methodItemStackAsCraftMirror;
 
-	// org.bukkit.craftbukkit.entity.Entity Class & Methods
+	// org.bukkit.craftbukkit.entity.CraftEntity Class & Methods
 	public static Class<?> classCraftEntity;
 	public static Method methodEntityAsNMSCopy;
 	public static Method methodEntityAsCraftMirror;
+	
+	// org.bukkit.craftbukkit.block.CraftBlockState Class & Methods
+	public static Class<?> classCraftBlockState;
+	public static Method methodBlockStateGetTileEntity;
+	public static Method methodBlockStateGetBlockState;
 	
 	/**
 	 * Get a net.minecraft.server.ItemStack object from a Bukkit {@link ItemStack} object
@@ -88,6 +106,22 @@ public class ReflectionUtils {
 	}
 	
 	/**
+	 * Get a net.minecraft.server.TileEntity object from a Bukkit {@link BlockState} object
+	 * 
+	 * @param state - The Bukkit BlockState to convert
+	 * @return the nms.TileEntity object
+	 */
+	public static Object getNMSTileEntity(BlockState state) {
+		Preconditions.checkNotNull(state, "BlockState cannot be null");
+		
+		try {
+			return methodBlockStateGetTileEntity.invoke(state);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			return null;
+		}
+	}
+	
+	/**
 	 * Get a Bukkit {@link ItemStack} object from a net.minecraft.server.ItemStack object
 	 * 
 	 * @param nmsItem - The nms.ItemStack object
@@ -114,6 +148,29 @@ public class ReflectionUtils {
 
 		try {
 			return (Entity) methodEntityAsCraftMirror.invoke(null, nmsEntity);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			return null;
+		}
+	}
+	
+	/**
+	 * Get a Bukkit {@link BlockState} object from a net.minecraft.server.TileEntity object
+	 * 
+	 * @param nmsTileEntity - The nms.TileEntity object
+	 * @return the Bukkit BlockState object
+	 */
+	public static BlockState getBukkitBlockState(Object nmsTileEntity) {
+		Preconditions.checkNotNull(nmsTileEntity, "TileEntity cannot be null");
+		
+		try {
+			Object nmsWorld = methodTileEntityGetWorld.invoke(nmsTileEntity);
+			Object blockPos = methodTileEntityGetPosition.invoke(nmsTileEntity);
+			
+			int x = (int) methodBlockPositionGetX.invoke(blockPos);
+			int y = (int) methodBlockPositionGetY.invoke(blockPos);
+			int z = (int) methodBlockPositionGetZ.invoke(blockPos);
+			
+			return (BlockState) methodBlockStateGetBlockState.invoke(null, nmsWorld, x, y, z);
 		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			return null;
 		}
@@ -189,12 +246,25 @@ public class ReflectionUtils {
 		classNMSEntity = getNMSClass("Entity");
 		methodEntitySetTag = getMethod("f", classNMSEntity, classNBTTagCompound);
 		methodEntityGetTag = getMethod("e", classNMSEntity, classNBTTagCompound);
+		classNMSTileEntity = getNMSClass("TileEntity");
+		methodTileEntitySetTag = getMethod("a", classNMSTileEntity, classNBTTagCompound);
+		methodTileEntityGetTag = getMethod("c", classNMSTileEntity, classNBTTagCompound);
+		methodTileEntityGetWorld = getMethod("getWorld", classNMSTileEntity);
+		methodTileEntityGetPosition = getMethod("getPosition", classNMSTileEntity);
+		classBlockPosition = getNMSClass("BlockPosition");
+		methodBlockPositionGetX = getMethod("getX", classBlockPosition);
+		methodBlockPositionGetY = getMethod("getY", classBlockPosition);
+		methodBlockPositionGetZ = getMethod("getZ", classBlockPosition);
+		classWorld = getNMSClass("World");
 		classCraftItemStack = getCBClass("inventory.CraftItemStack");
 		methodItemStackAsNMSCopy = getMethod("asNMSCopy", classCraftItemStack, ItemStack.class);
 		methodItemStackAsCraftMirror = getMethod("asCraftMirror", classCraftItemStack, classNMSItemStack);
 		classCraftEntity = getCBClass("entity.CraftEntity");
 		methodEntityAsNMSCopy = getMethod("getHandle", classCraftEntity);
 		methodEntityAsCraftMirror = getMethod("getBukkitEntity", classCraftEntity);
+		classCraftBlockState = getCBClass("block.CraftBlockState");
+		methodBlockStateGetTileEntity = getMethod("getTileEntity", classCraftBlockState);
+		methodBlockStateGetBlockState = getMethod("getTileEntity", classCraftBlockState, classWorld, Integer.TYPE, Integer.TYPE, Integer.TYPE);
 	}
 	
 	/**

@@ -3,6 +3,7 @@ package me.choco.nbt;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.BlockState;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -12,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.choco.nbt.types.NBTEntity;
 import me.choco.nbt.types.NBTItem;
+import me.choco.nbt.types.NBTTileEntity;
 import me.choco.nbt.utils.ReflectionUtils;
 
 /**
@@ -31,7 +33,7 @@ public class NBTAPI extends JavaPlugin {
 	
 	/* TODO:
 	 *   - NBTEntity method bodies
-	 *   - NBTTileEntity implementation
+	 *   - NBTTileEntity method bodies
 	 *   - Implement bStats ( http://www.bstats.org )
 	 *   - Write proper commands to modify NBT data for Entity, TileEntity and ItemStack objects (i.e. not the onCommand() down below)
 	 */
@@ -46,6 +48,8 @@ public class NBTAPI extends JavaPlugin {
 		this.getLogger().info("Bukkit implementation " + this.bukkitVersion);
 		
 		ReflectionUtils.loadNMSClasses(this.bukkitVersion);
+		
+		// TODO: new Metrics(this);
 	}
 	
 	/**
@@ -83,6 +87,20 @@ public class NBTAPI extends JavaPlugin {
 			throw new UnsupportedOperationException("There was an issue retrieving an NBTModifiable Entity");
 		
 		return nbtEntity;
+	}
+	
+	/**
+	 * Get the NBT modifiable equivalent of a Tile Entity (BlockState)
+	 * 
+	 * @param blockState - The tile entity (block state) to modify
+	 * @return a modifiable tile entity
+	 */
+	public static <T extends BlockState> NBTTileEntity<T> getNBTTileEntity(T blockState) {
+		NBTTileEntity<T> nbtTileEntity = new NBTTileEntity<>(blockState);
+		if (!nbtTileEntity.isSupported())
+			throw new UnsupportedOperationException("There was an issue retrieving an NBTModifiable TileEntity");
+		
+		return nbtTileEntity;
 	}
 	
 	@Override
