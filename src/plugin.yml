@@ -1,7 +1,7 @@
 name: NBT-API
 main: me.choco.nbt.NBTAPI
 version: 1.0
-description: A library to assist developers in modifying custom NBT data for ItemStacks and TileEntities
+description: A library to assist developers in modifying custom NBT data for ItemStacks, Entities and TileEntities
 author: 2008Choco
 commands:
     itemnbt:

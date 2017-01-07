@@ -29,6 +29,13 @@ import me.choco.nbt.utils.ReflectionUtils;
  */
 public class NBTAPI extends JavaPlugin {
 	
+	/* TODO:
+	 *   - NBTEntity method bodies
+	 *   - NBTTileEntity implementation
+	 *   - Implement bStats ( http://www.bstats.org )
+	 *   - Write proper commands to modify NBT data for Entity, TileEntity and ItemStack objects (i.e. not the onCommand() down below)
+	 */
+	
 	// Bukkit implementation, (ex: 1_11_R1)
 	private String bukkitVersion;
 	
