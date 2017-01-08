@@ -17,8 +17,8 @@ import me.choco.nbt.utils.ReflectionUtils;
  * existing ItemStack, Entity and TileEntity objects. NBT data is managed
  * by the server, and this API is meant to interface with it and simplify
  * accessing net.minecraft.server methods.
- * <br>
- * <br> This library uses reflection, and will hardly require updates - if
+ * <p>
+ * This library uses reflection, and will hardly require updates - if
  * any at all. The goal of this plugin is to allow for interaction with custom
  * NBT data, yet simultaneously maintain high performance.
  * 

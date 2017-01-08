@@ -20,6 +20,11 @@ public class NBTEntity implements NBTModifiable {
 	
     private final Object nmsEntity;
 
+    /**
+     * Create a new instance of an Entity with modifiable NBT data
+     * 
+     * @param entity - The Bukkit Entity
+     */
     public NBTEntity(Entity entity) {
         Preconditions.checkNotNull(entity, "Cannot modify the NBT of a null Entity");
         this.nmsEntity = getNMSEntity(entity);
@@ -29,7 +34,7 @@ public class NBTEntity implements NBTModifiable {
     public boolean isSupported() {
         return this.nmsEntity != null;
     }
-
+    
     @Override
     public NBTModifiable removeKey(String key) {
         Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
@@ -166,6 +171,13 @@ public class NBTEntity implements NBTModifiable {
         return this.getNBTValue(methodGetBoolean, key, Boolean.class, false);
     }
 
+	/**
+	 * Set a value in the entity's NBT structure
+	 * 
+	 * @param method - The reflected method to call. Should be a set method
+	 * @param key - The key to set
+	 * @param value - The value to set
+	 */
     private <T> void setNBTValue(Method method, String key, T value) {
         try {
             Object nbt = methodEntityGetTag.invoke(nmsEntity);
@@ -178,6 +190,15 @@ public class NBTEntity implements NBTModifiable {
         }
     }
 
+	/**
+	 * Get a value in the entity's NBT structure
+	 * 
+	 * @param method - The reflected method to call. Should be a get method
+	 * @param key - The key to get
+	 * @param returnType - The type of object that will be returned
+	 * @param defaultValue - The default value to return if no value was present
+	 * @return the value of the key, or the default value if not found
+	 */
     private <T> T getNBTValue(Method method, String key, Class<T> returnType, T defaultValue) {
         try {
             Object nbt = methodEntityGetTag.invoke(nmsEntity);

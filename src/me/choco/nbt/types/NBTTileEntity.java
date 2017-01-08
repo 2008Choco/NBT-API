@@ -11,10 +11,24 @@ import com.google.common.base.Preconditions;
 
 import me.choco.nbt.utils.NBTModifiable;
 
+/**
+ * A TileEntity object with modifiable NBT data. Tile entities include
+ * blocks that store data, such as, but not limit to, Chests, Furnaces and
+ * Signs
+ * 
+ * @param <T> - The specific Bukkit BlockState to represent
+ * 
+ * @author Parker Hawke - 2008Choco
+ */
 public class NBTTileEntity<T extends BlockState> implements NBTModifiable {
 	
 	private final Object nmsTileEntity;
 	
+	/**
+	 * Create a new instance of a TileEntity (BlockState) with modifiable NBT data
+	 * 
+	 * @param blockState - The Bukkit BlockState
+	 */
 	public NBTTileEntity(T blockState) {
 		Preconditions.checkNotNull(blockState, "Cannot modify the NBT of a null BlockState");
 		this.nmsTileEntity = getNMSTileEntity(blockState);
@@ -161,6 +175,13 @@ public class NBTTileEntity<T extends BlockState> implements NBTModifiable {
         return this.getNBTValue(methodGetBoolean, key, Boolean.class, false);
     }
 	
+	/**
+	 * Set a value in the tile entity's NBT structure
+	 * 
+	 * @param method - The reflected method to call. Should be a set method
+	 * @param key - The key to set
+	 * @param value - The value to set
+	 */
     private <M> void setNBTValue(Method method, String key, M value) {
         try {
             Object nbt = methodEntityGetTag.invoke(nmsTileEntity);
@@ -173,6 +194,15 @@ public class NBTTileEntity<T extends BlockState> implements NBTModifiable {
         }
     }
 
+	/**
+	 * Get a value in the tile entity's NBT structure
+	 * 
+	 * @param method - The reflected method to call. Should be a get method
+	 * @param key - The key to get
+	 * @param returnType - The type of object that will be returned
+	 * @param defaultValue - The default value to return if no value was present
+	 * @return the value of the key, or the default value if not found
+	 */
     private <M> M getNBTValue(Method method, String key, Class<M> returnType, M defaultValue) {
         try {
             Object nbt = methodEntityGetTag.invoke(nmsTileEntity);
