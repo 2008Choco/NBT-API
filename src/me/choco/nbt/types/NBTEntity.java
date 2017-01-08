@@ -4,17 +4,18 @@ import com.google.common.base.Preconditions;
 import me.choco.nbt.utils.NBTModifiable;
 import org.bukkit.entity.Entity;
 
-import static me.choco.nbt.utils.ReflectionUtils.getNMSEntity;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import static me.choco.nbt.utils.ReflectionUtils.*;
 
 /**
  * An Entity object with modifiable NBT data
- * 
+ *
  * @author iso2013
  */
 public class NBTEntity implements NBTModifiable {
-	
-    @SuppressWarnings("unused") // TEMP
-	private final Entity entity;
+    private final Entity entity;
     private final Object nmsEntity;
 
     public NBTEntity(Entity entity) {
@@ -26,96 +27,165 @@ public class NBTEntity implements NBTModifiable {
 
     @Override
     public boolean isSupported() {
-        return nmsEntity != null;
+        return this.nmsEntity != null;
     }
 
     @Override
     public NBTModifiable removeKey(String key) {
-        return null;
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+
+        try {
+            Object nbt = methodEntityGetTag.invoke(nmsEntity);
+            if (nbt == null) return this;
+            methodRemove.invoke(nbt, key);
+            methodEntitySetTag.invoke(nmsEntity, this);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return this;
     }
 
     @Override
     public boolean hasKey(String key) {
-        return false;
+        if (key == null) return false;
+        boolean hasTag = false;
+
+        try {
+            Object nbt = methodEntityGetTag.invoke(nmsEntity);
+            if (nbt == null) return false;
+
+            hasTag = (boolean) methodHasKey.invoke(nbt, key);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return hasTag;
     }
 
     @Override
     public NBTModifiable setString(String key, String value) {
-        return null;
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.setNBTValue(methodSetString, key, value);
+        return this;
     }
 
     @Override
     public String getString(String key) {
-        return null;
+        if (key == null) return null;
+        return this.getNBTValue(methodGetString, key, String.class, "");
     }
 
     @Override
     public NBTModifiable setInt(String key, int value) {
-        return null;
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.setNBTValue(methodSetInt, key, value);
+        return this;
     }
 
     @Override
     public int getInt(String key) {
-        return 0;
+        if (key == null) return -1;
+        return this.getNBTValue(methodGetInt, key, Integer.class, -1);
     }
 
     @Override
     public NBTModifiable setDouble(String key, double value) {
-        return null;
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.setNBTValue(methodSetDouble, key, value);
+        return this;
     }
 
     @Override
     public double getDouble(String key) {
-        return 0;
+        if (key == null) return -1;
+        return this.getNBTValue(methodGetDouble, key, Double.class, -1d);
     }
 
     @Override
     public NBTModifiable setFloat(String key, float value) {
-        return null;
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.setNBTValue(methodSetFloat, key, value);
+        return this;
     }
 
     @Override
     public float getFloat(String key) {
-        return 0;
+        if (key == null) return -1;
+        return this.getNBTValue(methodGetDouble, key, Float.class, -1f);
     }
 
     @Override
     public NBTModifiable setShort(String key, short value) {
-        return null;
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.setNBTValue(methodSetShort, key, value);
+        return this;
     }
 
     @Override
     public short getShort(String key) {
-        return 0;
+        if (key == null) return -1;
+        return this.getNBTValue(methodGetDouble, key, Short.class, (short) -1);
     }
 
     @Override
     public NBTModifiable setLong(String key, long value) {
-        return null;
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.setNBTValue(methodSetLong, key, value);
+        return this;
     }
 
     @Override
     public long getLong(String key) {
-        return 0;
+        if (key == null) return -1;
+        return this.getNBTValue(methodGetDouble, key, Long.class, -1L);
     }
 
     @Override
     public NBTModifiable setByte(String key, byte value) {
-        return null;
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.setNBTValue(methodSetByte, key, value);
+        return this;
     }
 
     @Override
     public byte getByte(String key) {
-        return 0;
+        if (key == null) return -1;
+        return this.getNBTValue(methodGetDouble, key, Byte.class, (byte) -1);
     }
 
     @Override
     public NBTModifiable setBoolean(String key, boolean value) {
-        return null;
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.setNBTValue(methodSetBoolean, key, value);
+        return this;
     }
 
     @Override
     public boolean getBoolean(String key) {
-        return false;
+        if (key == null) return false;
+        return this.getNBTValue(methodGetDouble, key, Boolean.class, false);
+    }
+
+    private <T> void setNBTValue(Method method, String key, T value) {
+        try {
+            Object nbt = methodEntityGetTag.invoke(nmsEntity);
+            if (nbt == null) nbt = newNBTTagCompound();
+
+            method.invoke(nbt, key, value);
+            methodEntitySetTag.invoke(nmsEntity, nbt);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private <T> T getNBTValue(Method method, String key, Class<T> returnType, T defaultValue) {
+        try {
+            Object nmsEntity = methodEntityAsNMSCopy.invoke(null, entity);
+            Object nbt = methodEntityGetTag.invoke(nmsEntity);
+            if (nbt == null) return defaultValue;
+
+            return returnType.cast(method.invoke(nbt, key));
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            return defaultValue;
+        }
     }
 }
