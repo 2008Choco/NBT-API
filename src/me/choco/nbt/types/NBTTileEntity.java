@@ -2,6 +2,9 @@ package me.choco.nbt.types;
 
 import static me.choco.nbt.utils.ReflectionUtils.*;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import org.bukkit.block.BlockState;
 
 import com.google.common.base.Preconditions;
@@ -10,14 +13,10 @@ import me.choco.nbt.utils.NBTModifiable;
 
 public class NBTTileEntity<T extends BlockState> implements NBTModifiable {
 	
-	@SuppressWarnings("unused")
-	private final T blockState;
 	private final Object nmsTileEntity;
 	
 	public NBTTileEntity(T blockState) {
 		Preconditions.checkNotNull(blockState, "Cannot modify the NBT of a null BlockState");
-		
-		this.blockState = blockState;
 		this.nmsTileEntity = getNMSTileEntity(blockState);
 	}
 
@@ -28,92 +27,161 @@ public class NBTTileEntity<T extends BlockState> implements NBTModifiable {
 
 	@Override
 	public NBTModifiable removeKey(String key) {
-		return null;
+		Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+
+        try {
+            Object nbt = methodTileEntityGetTag.invoke(nmsTileEntity);
+            if (nbt == null) return this;
+            
+            methodRemove.invoke(nbt, key);
+            methodTileEntitySetTag.invoke(nmsTileEntity, this);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return this;
 	}
 
 	@Override
 	public boolean hasKey(String key) {
-		return false;
+        if (key == null) return false;
+        boolean hasTag = false;
+
+        try {
+            Object nbt = methodTileEntityGetTag.invoke(nmsTileEntity);
+            if (nbt == null) return false;
+
+            hasTag = (boolean) methodHasKey.invoke(nbt, key);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return hasTag;
 	}
 
 	@Override
-	public NBTModifiable setString(String key, String value) {
-		return null;
-	}
+    public NBTModifiable setString(String key, String value) {
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.setNBTValue(methodSetString, key, value);
+        return this;
+    }
 
-	@Override
-	public String getString(String key) {
-		return null;
-	}
+    @Override
+    public String getString(String key) {
+        if (key == null) return null;
+        return this.getNBTValue(methodGetString, key, String.class, "");
+    }
 
-	@Override
-	public NBTModifiable setInt(String key, int value) {
-		return null;
-	}
+    @Override
+    public NBTModifiable setInt(String key, int value) {
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.setNBTValue(methodSetInt, key, value);
+        return this;
+    }
 
-	@Override
-	public int getInt(String key) {
-		return 0;
-	}
+    @Override
+    public int getInt(String key) {
+        if (key == null) return -1;
+        return this.getNBTValue(methodGetInt, key, Integer.class, -1);
+    }
 
-	@Override
-	public NBTModifiable setDouble(String key, double value) {
-		return null;
-	}
+    @Override
+    public NBTModifiable setDouble(String key, double value) {
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.setNBTValue(methodSetDouble, key, value);
+        return this;
+    }
 
-	@Override
-	public double getDouble(String key) {
-		return 0;
-	}
+    @Override
+    public double getDouble(String key) {
+        if (key == null) return -1;
+        return this.getNBTValue(methodGetDouble, key, Double.class, -1d);
+    }
 
-	@Override
-	public NBTModifiable setFloat(String key, float value) {
-		return null;
-	}
+    @Override
+    public NBTModifiable setFloat(String key, float value) {
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.setNBTValue(methodSetFloat, key, value);
+        return this;
+    }
 
-	@Override
-	public float getFloat(String key) {
-		return 0;
-	}
+    @Override
+    public float getFloat(String key) {
+        if (key == null) return -1;
+        return this.getNBTValue(methodGetFloat, key, Float.class, -1f);
+    }
 
-	@Override
-	public NBTModifiable setShort(String key, short value) {
-		return null;
-	}
+    @Override
+    public NBTModifiable setShort(String key, short value) {
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.setNBTValue(methodSetShort, key, value);
+        return this;
+    }
 
-	@Override
-	public short getShort(String key) {
-		return 0;
-	}
+    @Override
+    public short getShort(String key) {
+        if (key == null) return -1;
+        return this.getNBTValue(methodGetShort, key, Short.class, (short) -1);
+    }
 
-	@Override
-	public NBTModifiable setLong(String key, long value) {
-		return null;
-	}
+    @Override
+    public NBTModifiable setLong(String key, long value) {
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.setNBTValue(methodSetLong, key, value);
+        return this;
+    }
 
-	@Override
-	public long getLong(String key) {
-		return 0;
-	}
+    @Override
+    public long getLong(String key) {
+        if (key == null) return -1;
+        return this.getNBTValue(methodGetLong, key, Long.class, -1L);
+    }
 
-	@Override
-	public NBTModifiable setByte(String key, byte value) {
-		return null;
-	}
+    @Override
+    public NBTModifiable setByte(String key, byte value) {
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.setNBTValue(methodSetByte, key, value);
+        return this;
+    }
 
-	@Override
-	public byte getByte(String key) {
-		return 0;
-	}
+    @Override
+    public byte getByte(String key) {
+        if (key == null) return -1;
+        return this.getNBTValue(methodGetByte, key, Byte.class, (byte) -1);
+    }
 
-	@Override
-	public NBTModifiable setBoolean(String key, boolean value) {
-		return null;
-	}
-
-	@Override
-	public boolean getBoolean(String key) {
-		return false;
-	}
+    @Override
+    public NBTModifiable setBoolean(String key, boolean value) {
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.setNBTValue(methodSetBoolean, key, value);
+        return this;
+    }
+    
+    @Override
+    public boolean getBoolean(String key) {
+        if (key == null) return false;
+        return this.getNBTValue(methodGetBoolean, key, Boolean.class, false);
+    }
 	
+    private <M> void setNBTValue(Method method, String key, M value) {
+        try {
+            Object nbt = methodEntityGetTag.invoke(nmsTileEntity);
+            if (nbt == null) nbt = newNBTTagCompound();
+
+            method.invoke(nbt, key, value);
+            methodEntitySetTag.invoke(nmsTileEntity, nbt);
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private <M> M getNBTValue(Method method, String key, Class<M> returnType, M defaultValue) {
+        try {
+            Object nbt = methodEntityGetTag.invoke(nmsTileEntity);
+            if (nbt == null) return defaultValue;
+
+            return returnType.cast(method.invoke(nbt, key));
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            return defaultValue;
+        }
+    }
+    
 }

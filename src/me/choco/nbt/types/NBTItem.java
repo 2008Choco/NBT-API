@@ -32,7 +32,8 @@ public class NBTItem implements NBTModifiable {
 	}
 	
 	/**
-	 * Get the resulting ItemStack with the modified NBT data
+	 * Get the resulting ItemStack with the modified NBT data. If unsuccessfully,
+	 * the unmodified ItemStack will be returned
 	 * 
 	 * @return the ItemStack with NBT data
 	 */
@@ -207,7 +208,6 @@ public class NBTItem implements NBTModifiable {
 	 */
 	private <T> T getNBTValue(Method method, String key, Class<T> returnType, T defaultValue) {
 		try {
-			Object nmsItem = methodItemStackAsNMSCopy.invoke(null, item);
 			Object nbt = methodItemStackGetTag.invoke(nmsItem);
 			if (nbt == null) return defaultValue;
 			

@@ -1,13 +1,15 @@
 package me.choco.nbt.types;
 
-import com.google.common.base.Preconditions;
-import me.choco.nbt.utils.NBTModifiable;
-import org.bukkit.entity.Entity;
+import static me.choco.nbt.utils.ReflectionUtils.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static me.choco.nbt.utils.ReflectionUtils.*;
+import org.bukkit.entity.Entity;
+
+import com.google.common.base.Preconditions;
+
+import me.choco.nbt.utils.NBTModifiable;
 
 /**
  * An Entity object with modifiable NBT data
@@ -15,13 +17,11 @@ import static me.choco.nbt.utils.ReflectionUtils.*;
  * @author iso2013
  */
 public class NBTEntity implements NBTModifiable {
-    private final Entity entity;
+	
     private final Object nmsEntity;
 
     public NBTEntity(Entity entity) {
         Preconditions.checkNotNull(entity, "Cannot modify the NBT of a null Entity");
-
-        this.entity = entity;
         this.nmsEntity = getNMSEntity(entity);
     }
 
@@ -37,6 +37,7 @@ public class NBTEntity implements NBTModifiable {
         try {
             Object nbt = methodEntityGetTag.invoke(nmsEntity);
             if (nbt == null) return this;
+            
             methodRemove.invoke(nbt, key);
             methodEntitySetTag.invoke(nmsEntity, this);
         } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
@@ -110,7 +111,7 @@ public class NBTEntity implements NBTModifiable {
     @Override
     public float getFloat(String key) {
         if (key == null) return -1;
-        return this.getNBTValue(methodGetDouble, key, Float.class, -1f);
+        return this.getNBTValue(methodGetFloat, key, Float.class, -1f);
     }
 
     @Override
@@ -123,7 +124,7 @@ public class NBTEntity implements NBTModifiable {
     @Override
     public short getShort(String key) {
         if (key == null) return -1;
-        return this.getNBTValue(methodGetDouble, key, Short.class, (short) -1);
+        return this.getNBTValue(methodGetShort, key, Short.class, (short) -1);
     }
 
     @Override
@@ -136,7 +137,7 @@ public class NBTEntity implements NBTModifiable {
     @Override
     public long getLong(String key) {
         if (key == null) return -1;
-        return this.getNBTValue(methodGetDouble, key, Long.class, -1L);
+        return this.getNBTValue(methodGetLong, key, Long.class, -1L);
     }
 
     @Override
@@ -149,7 +150,7 @@ public class NBTEntity implements NBTModifiable {
     @Override
     public byte getByte(String key) {
         if (key == null) return -1;
-        return this.getNBTValue(methodGetDouble, key, Byte.class, (byte) -1);
+        return this.getNBTValue(methodGetByte, key, Byte.class, (byte) -1);
     }
 
     @Override
@@ -162,7 +163,7 @@ public class NBTEntity implements NBTModifiable {
     @Override
     public boolean getBoolean(String key) {
         if (key == null) return false;
-        return this.getNBTValue(methodGetDouble, key, Boolean.class, false);
+        return this.getNBTValue(methodGetBoolean, key, Boolean.class, false);
     }
 
     private <T> void setNBTValue(Method method, String key, T value) {
@@ -179,7 +180,6 @@ public class NBTEntity implements NBTModifiable {
 
     private <T> T getNBTValue(Method method, String key, Class<T> returnType, T defaultValue) {
         try {
-            Object nmsEntity = methodEntityAsNMSCopy.invoke(null, entity);
             Object nbt = methodEntityGetTag.invoke(nmsEntity);
             if (nbt == null) return defaultValue;
 
