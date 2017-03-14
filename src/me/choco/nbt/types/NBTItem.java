@@ -1,15 +1,16 @@
 package me.choco.nbt.types;
 
-import com.google.common.base.Preconditions;
-
-import me.choco.nbt.nbt.NBTBase;
-import me.choco.nbt.utils.NBTModifiable;
-import org.bukkit.inventory.ItemStack;
+import static me.choco.nbt.utils.ReflectionUtils.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static me.choco.nbt.utils.ReflectionUtils.*;
+import com.google.common.base.Preconditions;
+
+import org.bukkit.inventory.ItemStack;
+
+import me.choco.nbt.nbt.NBTBase;
+import me.choco.nbt.utils.NBTModifiable;
 
 /**
  * An ItemStack object with modifiable NBT data
@@ -43,6 +44,8 @@ public class NBTItem implements NBTModifiable {
 		ItemStack modifiedItem = getBukkitItemStack(nmsItem);
 		return modifiedItem != null ? modifiedItem : item;
 	}
+	
+	// TODO Apply any NBTBase information to the NBT data
 
 	@Override
 	public boolean isSupported() {

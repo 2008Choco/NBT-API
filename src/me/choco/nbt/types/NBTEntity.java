@@ -5,9 +5,9 @@ import static me.choco.nbt.utils.ReflectionUtils.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.bukkit.entity.Entity;
-
 import com.google.common.base.Preconditions;
+
+import org.bukkit.entity.Entity;
 
 import me.choco.nbt.nbt.NBTBase;
 import me.choco.nbt.utils.NBTModifiable;

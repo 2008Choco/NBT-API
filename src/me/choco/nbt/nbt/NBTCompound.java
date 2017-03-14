@@ -1,6 +1,18 @@
 package me.choco.nbt.nbt;
 
-import me.choco.nbt.utils.NBTModifiable;
+import java.util.Map;
+
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Maps;
+
+import me.choco.nbt.nbt.data.NBTBaseBoolean;
+import me.choco.nbt.nbt.data.NBTBaseByte;
+import me.choco.nbt.nbt.data.NBTBaseDouble;
+import me.choco.nbt.nbt.data.NBTBaseFloat;
+import me.choco.nbt.nbt.data.NBTBaseInt;
+import me.choco.nbt.nbt.data.NBTBaseLong;
+import me.choco.nbt.nbt.data.NBTBaseShort;
+import me.choco.nbt.nbt.data.NBTBaseString;
 
 /**
  * Represents an abstractified net.minecraft.server.NBTTagCompound object
@@ -8,120 +20,170 @@ import me.choco.nbt.utils.NBTModifiable;
  * @author Parker Hawke - 2008Choco
  */
 public class NBTCompound extends NBTBase {
+	
+	private final Map<String, NBTBase> compounds;
+	
+	public NBTCompound() {
+		this.compounds = Maps.newHashMap();
+	}
+	
+	private NBTCompound(Map<String, NBTBase> compounds) {
+		this.compounds = compounds;
+	}
 
-	@Override
 	public boolean isEmpty() {
-		return false;
+		return compounds.isEmpty();
 	}
 	
-	@Override
 	public NBTCompound clone() {
-		return null;
+		return new NBTCompound(compounds);
 	}
 	
-	@Override
 	public boolean equals(Object tag) {
-		return false;
+		if (!(tag instanceof NBTCompound)) return false;
+		return compounds.equals(((NBTCompound) tag).compounds);
 	}
 	
-	@Override
-	public NBTModifiable removeKey(String key) {
+	public NBTCompound removeKey(String key) {
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.compounds.remove(key);
         return this;
 	}
 
-	@Override
 	public boolean hasKey(String key) {
-        return true;
+        if (key == null) return false;
+        return this.compounds.containsKey(key);
 	}
 
-	@Override
-    public NBTModifiable setString(String key, String value) {
+    public NBTCompound setString(String key, String value) {
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.compounds.put(key, new NBTBaseString(value));
         return this;
     }
 
-    @Override
     public String getString(String key) {
-    	return null;
+        if (key == null) return null;
+        
+        NBTBase base = this.compounds.get(key);
+        if (base == null || !(base instanceof NBTBaseString)) return null;
+        
+    	return ((NBTBaseString) base).getValue();
     }
 
-    @Override
-    public NBTModifiable setInt(String key, int value) {
+    public NBTCompound setInt(String key, int value) {
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.compounds.put(key, new NBTBaseInt(value));
         return this;
     }
 
-    @Override
     public int getInt(String key) {
-    	return -1;
+        if (key == null) return -1;
+        
+        NBTBase base = this.compounds.get(key);
+        if (base == null || !(base instanceof NBTBaseInt)) return -1;
+        
+    	return ((NBTBaseInt) base).getValue();
     }
 
-    @Override
-    public NBTModifiable setDouble(String key, double value) {
+    public NBTCompound setDouble(String key, double value) {
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.compounds.put(key, new NBTBaseDouble(value));
         return this;
     }
 
-    @Override
     public double getDouble(String key) {
-    	return -1.0;
+        if (key == null) return -1.0;
+        
+        NBTBase base = this.compounds.get(key);
+        if (base == null || !(base instanceof NBTBaseDouble)) return -1.0;
+        
+    	return ((NBTBaseDouble) base).getValue();
     }
 
-    @Override
-    public NBTModifiable setFloat(String key, float value) {
+    public NBTCompound setFloat(String key, float value) {
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.compounds.put(key, new NBTBaseFloat(value));
         return this;
     }
 
-    @Override
     public float getFloat(String key) {
-    	return -1;
+        if (key == null) return -1;
+        
+        NBTBase base = this.compounds.get(key);
+        if (base == null || !(base instanceof NBTBaseFloat)) return -1;
+        
+    	return ((NBTBaseFloat) base).getValue();
     }
 
-    @Override
-    public NBTModifiable setShort(String key, short value) {
+    public NBTCompound setShort(String key, short value) {
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.compounds.put(key, new NBTBaseShort(value));
         return this;
     }
 
-    @Override
     public short getShort(String key) {
-    	return -1;
+        if (key == null) return -1;
+        
+        NBTBase base = this.compounds.get(key);
+        if (base == null || !(base instanceof NBTBaseShort)) return -1;
+        
+    	return ((NBTBaseShort) base).getValue();
     }
 
-    @Override
-    public NBTModifiable setLong(String key, long value) {
+    public NBTCompound setLong(String key, long value) {
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.compounds.put(key, new NBTBaseFloat(value));
         return this;
     }
 
-    @Override
     public long getLong(String key) {
-    	return -1;
+        if (key == null) return -1;
+        
+        NBTBase base = this.compounds.get(key);
+        if (base == null || !(base instanceof NBTBaseLong)) return -1;
+        
+    	return ((NBTBaseLong) base).getValue();
     }
 
-    @Override
-    public NBTModifiable setByte(String key, byte value) {
+    public NBTCompound setByte(String key, byte value) {
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.compounds.put(key, new NBTBaseByte(value));
         return this;
     }
 
-    @Override
     public byte getByte(String key) {
-    	return -1;
+        if (key == null) return -1;
+        
+        NBTBase base = this.compounds.get(key);
+        if (base == null || !(base instanceof NBTBaseByte)) return -1;
+        
+    	return ((NBTBaseByte) base).getValue();
     }
 
-    @Override
-    public NBTModifiable setBoolean(String key, boolean value) {
+    public NBTCompound setBoolean(String key, boolean value) {
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.compounds.put(key, new NBTBaseBoolean(value));
         return this;
     }
     
-    @Override
     public boolean getBoolean(String key) {
-    	return true;
+        if (key == null) return false;
+        
+        NBTBase base = this.compounds.get(key);
+        if (base == null || !(base instanceof NBTBaseBoolean)) return false;
+        
+    	return ((NBTBaseBoolean) base).getValue();
     }
 
-	@Override
-	public NBTModifiable setNBTValue(String key, NBTBase nbtTag) {
-		return null;
+	public NBTCompound setNBTValue(String key, NBTBase value) {
+        Preconditions.checkArgument(key != null && key.length() > 0, "Provided key cannot be null");
+        this.compounds.put(key, value);
+		return this;
 	}
 
-	@Override
 	public NBTBase getNBTValue(String key) {
-		return null;
+        if (key == null) return null;
+		return this.compounds.get(key);
 	}
 	
 }
