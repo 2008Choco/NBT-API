@@ -1,6 +1,8 @@
 package me.choco.nbt.types;
 
 import com.google.common.base.Preconditions;
+
+import me.choco.nbt.nbt.NBTBase;
 import me.choco.nbt.utils.NBTModifiable;
 import org.bukkit.inventory.ItemStack;
 
@@ -178,6 +180,16 @@ public class NBTItem implements NBTModifiable {
 	public boolean getBoolean(String key) {
 		if (key == null) return false;
 		return this.getNBTValue(methodGetBoolean, key, Boolean.class, false);
+	}
+
+	@Override
+	public NBTModifiable setNBTValue(String key, NBTBase nbtTag) {
+		return null;
+	}
+
+	@Override
+	public NBTBase getNBTValue(String key) {
+		return null;
 	}
 	
 	/**

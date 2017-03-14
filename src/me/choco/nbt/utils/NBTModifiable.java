@@ -1,5 +1,7 @@
 package me.choco.nbt.utils;
 
+import me.choco.nbt.nbt.NBTBase;
+
 /**
  * An interface representing an object that supports the modification
  * of its NBT tags
@@ -17,11 +19,7 @@ public interface NBTModifiable {
 	 *   - Long
 	 *   - Byte
 	 *   - Boolean
-	 *   - NBTBase TODO
-	 */
-	
-	/* TODO: #get() and #set() methods for NBTBase will allow for unknown object values. i.e. #getValue() returns Object
-	 * Doing this will simplify the ItemNBT command, as checking for valid types will not be required
+	 *   - NBTBase
 	 */
 	
 	/**
@@ -199,5 +197,25 @@ public interface NBTModifiable {
 	 * @return the value of the key. Default value if not present
 	 */
 	public boolean getBoolean(String key);
+	
+	/**
+	 * Set a key to an NBT component. A new key will be created if it
+	 * was not present on the NBT structure. Alternatively, the value
+	 * of the existing key will be overritten
+	 * 
+	 * @param key - The key to set
+	 * @param nbtTag - The value of the key
+	 * 
+	 * @return modifiable context. Chain methods
+	 */
+	public NBTModifiable setNBTValue(String key, NBTBase nbtTag);
+	
+	/**
+	 * Get a nbt component value from a key in the NBT structure
+	 * 
+	 * @param key - The key to set
+	 * @return the value of the key. Default value if not present
+	 */
+	public NBTBase getNBTValue(String key);
 	
 }

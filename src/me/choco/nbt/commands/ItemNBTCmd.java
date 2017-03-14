@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import me.choco.nbt.NBTAPI;
-import me.choco.nbt.nbt.NBTDataType;
+import me.choco.nbt.nbt.data.NBTDataType;
 import me.choco.nbt.types.NBTItem;
 
 public class ItemNBTCmd implements CommandExecutor {
@@ -55,7 +55,8 @@ public class ItemNBTCmd implements CommandExecutor {
 						if (args.length >= 4) {
 							String value = args[3];
 							
-							type.applyToNBTModifiable(nbtItem, key, value);
+							// TODO
+//							type.applyToNBTModifiable(nbtItem, key, value);
 							player.getInventory().setItemInMainHand((item = nbtItem.getModifiedItemStack()));
 							player.sendMessage(PREFIX + ChatColor.GREEN + "NBT tag \"" + key + "\" applied to item with value of \"" + value + "\"");
 						}

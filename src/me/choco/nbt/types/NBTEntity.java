@@ -9,6 +9,7 @@ import org.bukkit.entity.Entity;
 
 import com.google.common.base.Preconditions;
 
+import me.choco.nbt.nbt.NBTBase;
 import me.choco.nbt.utils.NBTModifiable;
 
 /**
@@ -170,6 +171,16 @@ public class NBTEntity implements NBTModifiable {
         if (key == null) return false;
         return this.getNBTValue(methodGetBoolean, key, Boolean.class, false);
     }
+
+	@Override
+	public NBTModifiable setNBTValue(String key, NBTBase nbtTag) {
+		return null;
+	}
+
+	@Override
+	public NBTBase getNBTValue(String key) {
+		return null;
+	}
 
 	/**
 	 * Set a value in the entity's NBT structure

@@ -39,10 +39,10 @@ public class NBTAPI extends JavaPlugin {
 	public void onEnable() {
 		// Reflection loading
 		this.getLogger().info("Retrieving Bukkit version information");
-		bukkitVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-		this.getLogger().info("Bukkit implementation " + this.bukkitVersion);
+		this.bukkitVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
+		this.getLogger().info("Bukkit implementation " + bukkitVersion);
 		
-		ReflectionUtils.loadNMSClasses(this.bukkitVersion);
+		ReflectionUtils.loadNMSClasses(bukkitVersion);
 		
 		// Command registration
 		this.getCommand("itemnbt").setExecutor(new ItemNBTCmd());
