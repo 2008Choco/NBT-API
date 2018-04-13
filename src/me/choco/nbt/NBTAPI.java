@@ -6,8 +6,10 @@ import me.choco.nbt.nbt.NBTList;
 import me.choco.nbt.nbt.data.NBTBasePrimitive;
 import me.choco.nbt.nbt.data.NBTBaseString;
 import me.choco.nbt.nbt.data.NBTDataType;
+import me.choco.nbt.types.NBTEntity;
 import me.choco.nbt.types.NBTItem;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
 public interface NBTAPI {
@@ -43,11 +45,19 @@ public interface NBTAPI {
 	public <T> NBTBase createNBTBase(NBTDataType<T> type, T value);
 	
 	/**
-	 * Get the NBT modifiable equivalent of an ItemStack
+	 * Get the NBT modifiable representation of an ItemStack
 	 * 
 	 * @param item the item to modify
 	 * @return an ItemStack with modifiable NBT
 	 */
 	public NBTItem getNBTItem(ItemStack item);
+	
+	/**
+	 * Get the NBT modifiable representation of an Entity
+	 * 
+	 * @param entity the entity to modify
+	 * @return an Entity with modifiable NBT
+	 */
+	public <T extends Entity> NBTEntity<T> getNBTEntity(T entity); 
 	
 }

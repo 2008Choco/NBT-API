@@ -8,9 +8,11 @@ import me.choco.nbt.nbt.NBTList;
 import me.choco.nbt.nbt.data.NBTBasePrimitive;
 import me.choco.nbt.nbt.data.NBTBaseString;
 import me.choco.nbt.nbt.data.NBTDataType;
+import me.choco.nbt.types.NBTEntity;
 import me.choco.nbt.types.NBTItem;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -106,6 +108,16 @@ public class NBTAPIPlugin extends JavaPlugin {
 	 */
 	public static NBTItem getNBTItem(ItemStack item) {
 		return api.getNBTItem(item);
+	}
+	
+	/**
+	 * Get the NBT modifiable representation of an Entity
+	 * 
+	 * @param entity the entity to modify
+	 * @return an Entity with modifiable NBT
+	 */
+	public static <T extends Entity> NBTEntity<T> getNBTEntity(T entity) {
+		return api.getNBTEntity(entity);
 	}
 	
 	/**

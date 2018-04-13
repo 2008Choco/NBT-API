@@ -10,13 +10,16 @@ import me.choco.nbt.impl.v1_12_R1.data.NBTBaseIntArray1_12_R1;
 import me.choco.nbt.impl.v1_12_R1.data.NBTBaseLong1_12_R1;
 import me.choco.nbt.impl.v1_12_R1.data.NBTBaseShort1_12_R1;
 import me.choco.nbt.impl.v1_12_R1.data.NBTBaseString1_12_R1;
+import me.choco.nbt.impl.v1_12_R1.modifiable.NBTEntity1_12_R1;
 import me.choco.nbt.impl.v1_12_R1.modifiable.NBTItem1_12_R1;
 import me.choco.nbt.nbt.NBTBase;
 import me.choco.nbt.nbt.NBTCompound;
 import me.choco.nbt.nbt.NBTList;
 import me.choco.nbt.nbt.data.NBTDataType;
+import me.choco.nbt.types.NBTEntity;
 import me.choco.nbt.types.NBTItem;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 
 public class NBTUtils1_12_R1 implements NBTAPI {
@@ -51,6 +54,11 @@ public class NBTUtils1_12_R1 implements NBTAPI {
 	@Override
 	public NBTItem getNBTItem(ItemStack item) {
 		return new NBTItem1_12_R1(item);
+	}
+	
+	@Override
+	public <T extends Entity> NBTEntity<T> getNBTEntity(T entity) {
+		return new NBTEntity1_12_R1<>(entity);
 	}
 	
 }
