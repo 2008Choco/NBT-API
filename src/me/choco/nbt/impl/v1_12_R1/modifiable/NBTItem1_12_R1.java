@@ -162,6 +162,7 @@ public class NBTItem1_12_R1 implements NBTItem {
 	
 	@Override
 	public NBTItem setIntArray(String key, int[] value) {
+		Preconditions.checkArgument(acceptingManipulation, "No longer accepting NBT edit invocations. Get a new instance of NBTItem");
 		this.root.setIntArray(key, value);
 		return this;
 	}
@@ -173,6 +174,7 @@ public class NBTItem1_12_R1 implements NBTItem {
 	
 	@Override
 	public NBTItem setByteArray(String key, byte[] value) {
+		Preconditions.checkArgument(acceptingManipulation, "No longer accepting NBT edit invocations. Get a new instance of NBTItem");
 		this.root.setByteArray(key, value);
 		return this;
 	}
