@@ -1,172 +1,115 @@
 package me.choco.nbt.nbt;
 
-import java.util.List;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-
-import me.choco.nbt.nbt.data.NBTBaseBoolean;
-import me.choco.nbt.nbt.data.NBTBaseByte;
-import me.choco.nbt.nbt.data.NBTBaseDouble;
-import me.choco.nbt.nbt.data.NBTBaseFloat;
-import me.choco.nbt.nbt.data.NBTBaseInt;
-import me.choco.nbt.nbt.data.NBTBaseLong;
-import me.choco.nbt.nbt.data.NBTBaseShort;
-import me.choco.nbt.nbt.data.NBTBaseString;
-
 /**
  * Represents an abstractified net.minecraft.server.NBTTagList object
  * 
  * @author Parker Hawke - 2008Choco
  */
-public class NBTList extends NBTBase {
+public interface NBTList extends NBTBase {
 	
-	private final List<NBTBase> compounds;
+	/**
+	 * Get the size of this list
+	 * 
+	 * @return the list size
+	 */
+	public int getSize();
 	
-	public NBTList() {
-		this.compounds = Lists.newArrayList();
-	}
+	/**
+	 * Add a String to this NBT list
+	 * 
+	 * @param value the value to add
+	 * @return modifiable context. Chain methods
+	 */
+	public NBTList addString(String value);
 	
-	private NBTList(List<NBTBase> compounds) {
-		this.compounds = compounds;
-	}
+	/**
+	 * Get a String from this NBT list at the given index
+	 * 
+	 * @param index the index to get
+	 * @return the String at the given index
+	 */
+	public String getString(int index);
 	
-	@Override
-	public boolean isEmpty() {
-		return compounds.isEmpty();
-	}
+	/**
+	 * Add an int to this NBT list
+	 * 
+	 * @param value the value to add
+	 * @return modifiable context. Chain methods
+	 */
+	public NBTList addInt(int value);
 	
-	@Override
-	public NBTList clone() {
-		return new NBTList(compounds);
-	}
+	/**
+	 * Get an int from this NBT list at the given index
+	 * 
+	 * @param index the index to get
+	 * @return the int at the given index
+	 */
+	public int getInt(int index);
 	
-	@Override
-	public boolean equals(Object tag) {
-		if (!(tag instanceof NBTList)) return false;
-		return compounds.equals(((NBTList) tag).compounds);
-	}
+	/**
+	 * Add a double to this NBT list
+	 * 
+	 * @param value the value to add
+	 * @return modifiable context. Chain methods
+	 */
+	public NBTList addDouble(double value);
 	
-	public NBTList addString(String value) {
-		this.compounds.add(new NBTBaseString(value));
-		return this;
-	}
+	/**
+	 * Get a double from this NBT list at the given index
+	 * 
+	 * @param index the index to get
+	 * @return the double at the given index
+	 */
+	public double getDouble(int index);
 	
-	public String getString(int index) {
-		Preconditions.checkArgument(index > 0 && index < compounds.size(), "Provided index must be between 0 and " + compounds.size());
-        
-        NBTBase base = this.compounds.get(index);
-        if (base == null || !(base instanceof NBTBaseString)) return null;
-        
-    	return ((NBTBaseString) base).getValue();
-	}
+	/**
+	 * Add a float to this NBT list
+	 * 
+	 * @param value the value to add
+	 * @return modifiable context. Chain methods
+	 */
+	public NBTList addFloat(float value);
 	
-	public NBTList addInt(int value) {
-		this.compounds.add(new NBTBaseInt(value));
-		return this;
-	}
+	/**
+	 * Get a float from this NBT list at the given index
+	 * 
+	 * @param index the index to get
+	 * @return the float at the given index
+	 */
+	public float getFloat(int index);
 	
-	public int getInt(int index) {
-		Preconditions.checkArgument(index > 0 && index < compounds.size(), "Provided index must be between 0 and " + compounds.size());
-        
-        NBTBase base = this.compounds.get(index);
-        if (base == null || !(base instanceof NBTBaseInt)) return -1;
-        
-    	return ((NBTBaseInt) base).getValue();
-	}
+	/**
+	 * Add an NBTCompound to this NBT list
+	 * 
+	 * @param value the value to add
+	 * @return modifiable context. Chain methods
+	 */
+	public NBTList addNBTCompound(NBTCompound value);
 	
-	public NBTList addDouble(double value) {
-		this.compounds.add(new NBTBaseDouble(value));
-		return this;
-	}
 	
-	public double getDouble(int index) {
-		Preconditions.checkArgument(index > 0 && index < compounds.size(), "Provided index must be between 0 and " + compounds.size());
-        
-        NBTBase base = this.compounds.get(index);
-        if (base == null || !(base instanceof NBTBaseDouble)) return -1.0;
-        
-    	return ((NBTBaseDouble) base).getValue();
-	}
+	/**
+	 * Get an NBTCompound from this NBT list at the given index
+	 * 
+	 * @param index the index to get
+	 * @return the NBTCompound at the given index
+	 */
+	public NBTCompound getNBTCompound(int index);
 	
-	public NBTList addFloat(float value) {
-		this.compounds.add(new NBTBaseFloat(value));
-		return this;
-	}
+	/**
+	 * Add an NBT value to this NBT list
+	 * 
+	 * @param value the value to add
+	 * @return modifiable context. Chain methods
+	 */
+	public NBTList addNBTValue(NBTBase value);
 	
-	public float getFloat(int index) {
-		Preconditions.checkArgument(index > 0 && index < compounds.size(), "Provided index must be between 0 and " + compounds.size());
-        
-        NBTBase base = this.compounds.get(index);
-        if (base == null || !(base instanceof NBTBaseFloat)) return -1;
-        
-    	return ((NBTBaseFloat) base).getValue();
-	}
 	
-	public NBTList addShort(short value) {
-		this.compounds.add(new NBTBaseShort(value));
-		return this;
-	}
-	
-	public short getShort(int index) {
-		Preconditions.checkArgument(index > 0 && index < compounds.size(), "Provided index must be between 0 and " + compounds.size());
-        
-        NBTBase base = this.compounds.get(index);
-        if (base == null || !(base instanceof NBTBaseShort)) return -1;
-        
-    	return ((NBTBaseShort) base).getValue();
-	}
-	
-	public NBTList addLong(long value) {
-		this.compounds.add(new NBTBaseLong(value));
-		return this;
-	}
-	
-	public long getLong(int index) {
-		Preconditions.checkArgument(index > 0 && index < compounds.size(), "Provided index must be between 0 and " + compounds.size());
-        
-        NBTBase base = this.compounds.get(index);
-        if (base == null || !(base instanceof NBTBaseLong)) return -1;
-        
-    	return ((NBTBaseLong) base).getValue();
-	}
-	
-	public NBTList addByte(byte value) {
-		this.compounds.add(new NBTBaseByte(value));
-		return this;
-	}
-	
-	public byte getByte(int index) {
-		Preconditions.checkArgument(index > 0 && index < compounds.size(), "Provided index must be between 0 and " + compounds.size());
-        
-        NBTBase base = this.compounds.get(index);
-        if (base == null || !(base instanceof NBTBaseByte)) return -1;
-        
-    	return ((NBTBaseByte) base).getValue();
-	}
-	
-	public NBTList addBoolean(boolean value) {
-		this.compounds.add(new NBTBaseBoolean(value));
-		return this;
-	}
-	
-	public boolean getBoolean(int index) {
-		Preconditions.checkArgument(index > 0 && index < compounds.size(), "Provided index must be between 0 and " + compounds.size());
-        
-        NBTBase base = this.compounds.get(index);
-        if (base == null || !(base instanceof NBTBaseBoolean)) return false;
-        
-    	return ((NBTBaseBoolean) base).getValue();
-	}
-	
-	public NBTList addNBTValue(NBTBase value) {
-		this.compounds.add(value);
-		return this;
-	}
-	
-	public NBTBase getNBTValue(int index) {
-		Preconditions.checkArgument(index > 0 && index < compounds.size(), "Provided index must be between 0 and " + compounds.size());
-		return this.compounds.get(index);
-	}
+	/**
+	 * Get an NBT value from this NBT list at the given index
+	 * 
+	 * @param index the index to get
+	 * @return the NBT value at the given index
+	 */
+	public NBTBase getNBTValue(int index);
 	
 }

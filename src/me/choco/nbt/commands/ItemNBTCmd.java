@@ -1,15 +1,15 @@
 package me.choco.nbt.commands;
 
+import me.choco.nbt.NBTAPIPlugin;
+import me.choco.nbt.nbt.data.NBTDataType;
+import me.choco.nbt.types.NBTItem;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import me.choco.nbt.NBTAPI;
-import me.choco.nbt.nbt.data.NBTDataType;
-import me.choco.nbt.types.NBTItem;
 
 public class ItemNBTCmd implements CommandExecutor {
 	
@@ -39,7 +39,7 @@ public class ItemNBTCmd implements CommandExecutor {
 		}
 		
 		if (args.length >= 1) {
-			NBTItem nbtItem = NBTAPI.getNBTItem(item);
+			NBTItem nbtItem = NBTAPIPlugin.getNBTItem(item);
 			
 			if (args[0].equalsIgnoreCase("set")) {
 				if (args.length >= 2) {
@@ -55,8 +55,8 @@ public class ItemNBTCmd implements CommandExecutor {
 						if (args.length >= 4) {
 							String value = args[3];
 							
-							// TODO
-//							type.applyToNBTModifiable(nbtItem, key, value);
+							// TODO: In most cases, this will cause a ClassCastException
+							type.applyToNBTModifiableGeneric(nbtItem, key, value);
 							player.getInventory().setItemInMainHand((item = nbtItem.getModifiedItemStack()));
 							player.sendMessage(PREFIX + ChatColor.GREEN + "NBT tag \"" + key + "\" applied to item with value of \"" + value + "\"");
 						}

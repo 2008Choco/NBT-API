@@ -2,31 +2,21 @@ package me.choco.nbt.nbt.data;
 
 import me.choco.nbt.nbt.NBTBase;
 
-public class NBTBaseString extends NBTBase {
+/**
+ * Represents an abstractified net.minecraft.server.NBTTagString object. This
+ * object acts as a compound with a single String value associated with it
+ * 
+ * @author Parker Hawke - 2008Choco
+ * 
+ * @see NBTBasePrimitive
+ */
+public interface NBTBaseString extends NBTBase {
 	
-	private String value;
-	
-	public NBTBaseString(String value) {
-		this.value = value;
-	}
-	
-	public void setValue(String value) {
-		this.value = value;
-	}
-	
-	public String getValue() {
-		return value;
-	}
-
-	@Override
-	public NBTBase clone() {
-		return new NBTBaseString(value);
-	}
-
-	@Override
-	public boolean equals(Object tag) {
-		if (!(tag instanceof NBTBaseString)) return false;
-		return value == ((NBTBaseString) tag).value;
-	}
+	/**
+	 * Get the String value of this NBT object
+	 * 
+	 * @return the string value
+	 */
+	public String getValue();
 	
 }
