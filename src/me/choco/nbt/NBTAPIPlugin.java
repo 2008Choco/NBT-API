@@ -31,7 +31,6 @@ public class NBTAPIPlugin extends JavaPlugin {
 	
 	/* TODO:
 	 *   - Implement bStats ( http://www.bstats.org )
-	 *   - Add abstraction for byte[] and other missing data types
 	 *   - Write implementations for other versions
 	 */
 	

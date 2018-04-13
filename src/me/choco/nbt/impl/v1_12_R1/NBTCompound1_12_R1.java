@@ -115,6 +115,28 @@ public class NBTCompound1_12_R1 extends NBTBase1_12_R1 implements NBTCompound {
 	public boolean getBoolean(String key) {
 		return ((NBTTagCompound) base).getBoolean(key);
 	}
+
+	@Override
+	public NBTCompound setIntArray(String key, int[] value) {
+		((NBTTagCompound) base).setIntArray(key, value);
+		return null;
+	}
+	
+	@Override
+	public int[] getIntArray(String key) {
+		return ((NBTTagCompound) base).getIntArray(key);
+	}
+	
+	@Override
+	public NBTCompound setByteArray(String key, byte[] value) {
+		((NBTTagCompound) base).setByteArray(key, value);
+		return this;
+	}
+	
+	@Override
+	public byte[] getByteArray(String key) {
+		return ((NBTTagCompound) base).getByteArray(key);
+	}
 	
 	@Override
 	public NBTCompound setNBTValue(String key, NBTBase value) {

@@ -161,6 +161,28 @@ public class NBTItem1_12_R1 implements NBTItem {
 	}
 	
 	@Override
+	public NBTItem setIntArray(String key, int[] value) {
+		this.root.setIntArray(key, value);
+		return this;
+	}
+	
+	@Override
+	public int[] getIntArray(String key) {
+		return root.getIntArray(key);
+	}
+	
+	@Override
+	public NBTItem setByteArray(String key, byte[] value) {
+		this.root.setByteArray(key, value);
+		return this;
+	}
+	
+	@Override
+	public byte[] getByteArray(String key) {
+		return root.getByteArray(key);
+	}
+	
+	@Override
 	public NBTItem setNBTValue(String key, NBTBase nbtTag) {
 		Preconditions.checkArgument(acceptingManipulation, "No longer accepting NBT edit invocations. Get a new instance of NBTItem");
 		

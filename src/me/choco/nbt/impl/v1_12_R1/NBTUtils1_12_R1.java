@@ -2,9 +2,11 @@ package me.choco.nbt.impl.v1_12_R1;
 
 import me.choco.nbt.NBTAPI;
 import me.choco.nbt.impl.v1_12_R1.data.NBTBaseByte1_12_R1;
+import me.choco.nbt.impl.v1_12_R1.data.NBTBaseByteArray1_12_R1;
 import me.choco.nbt.impl.v1_12_R1.data.NBTBaseDouble1_12_R1;
 import me.choco.nbt.impl.v1_12_R1.data.NBTBaseFloat1_12_R1;
 import me.choco.nbt.impl.v1_12_R1.data.NBTBaseInt1_12_R1;
+import me.choco.nbt.impl.v1_12_R1.data.NBTBaseIntArray1_12_R1;
 import me.choco.nbt.impl.v1_12_R1.data.NBTBaseLong1_12_R1;
 import me.choco.nbt.impl.v1_12_R1.data.NBTBaseShort1_12_R1;
 import me.choco.nbt.impl.v1_12_R1.data.NBTBaseString1_12_R1;
@@ -38,6 +40,8 @@ public class NBTUtils1_12_R1 implements NBTAPI {
 		if (type == NBTDataType.SHORT) return new NBTBaseShort1_12_R1((short) value);
 		if (type == NBTDataType.LONG) return new NBTBaseLong1_12_R1((long) value);
 		if (type == NBTDataType.BYTE) return new NBTBaseByte1_12_R1((byte) value);
+		if (type == NBTDataType.INT_ARRAY) return new NBTBaseIntArray1_12_R1((int[]) value);
+		if (type == NBTDataType.BYTE_ARRAY) return new NBTBaseByteArray1_12_R1((byte[]) value);
 		if (type == NBTDataType.NBT_COMPOUND) return new NBTCompound1_12_R1();
 		if (type == NBTDataType.NBT_LIST) return new NBTList1_12_R1();
 		

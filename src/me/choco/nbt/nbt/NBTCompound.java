@@ -182,6 +182,46 @@ public interface NBTCompound extends NBTBase {
 	 * @return the value of the key. Default value if not present
 	 */
     public boolean getBoolean(String key);
+    
+	/**
+	 * Set a key to a int[] value. A new key will be created if it 
+	 * was not present on the NBT structure. Alternatively, the value 
+	 * of the existing key will be overwritten
+	 * 
+	 * @param key the key to set
+	 * @param value the value of the key
+	 * 
+	 * @return modifiable context. Chain methods
+	 */
+    public NBTCompound setIntArray(String key, int[] value);
+    
+	/**
+	 * Get a int[] value from a key in the NBT structure
+	 * 
+	 * @param key the key to get
+	 * @return the value of the key. Default value if not present
+	 */
+    public int[] getIntArray(String key);
+    
+	/**
+	 * Set a key to a byte[] value. A new key will be created if it 
+	 * was not present on the NBT structure. Alternatively, the value 
+	 * of the existing key will be overwritten
+	 * 
+	 * @param key the key to set
+	 * @param value the value of the key
+	 * 
+	 * @return modifiable context. Chain methods
+	 */
+    public NBTCompound setByteArray(String key, byte[] value);
+    
+	/**
+	 * Get a byte[] value from a key in the NBT structure
+	 * 
+	 * @param key the key to get
+	 * @return the value of the key. Default value if not present
+	 */
+    public byte[] getByteArray(String key);
 	
 	/**
 	 * Set a key to an NBT component. A new key will be created if it

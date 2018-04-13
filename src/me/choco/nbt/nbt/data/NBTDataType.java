@@ -54,7 +54,16 @@ public final class NBTDataType<T> {
 	 */
 	public static final NBTDataType<Byte> BYTE = new NBTDataType<>(NBTModifiable::setByte, "byte");
 	
-	// TODO
+	/**
+	 * A int[] type. Friendly names: "integer_array" and "int_array"
+	 */
+	public static final NBTDataType<int[]> INT_ARRAY = new NBTDataType<>(NBTModifiable::setIntArray, "integer_array", "int_array");
+	
+	/**
+	 * A byte[] type. Friendly name: "byte_array"
+	 */
+	public static final NBTDataType<byte[]> BYTE_ARRAY = new NBTDataType<>(NBTModifiable::setByteArray, "byte_array");
+	
 	/**
 	 * An NBTBase type. Represents a JSON Object in the NBT structure
 	 */
