@@ -68,7 +68,7 @@ public final class NBTDataType<T> {
 	 * An NBTBase type. Represents a JSON Object in the NBT structure
 	 */
 	public static final NBTDataType<NBTCompound> NBT_COMPOUND = new NBTDataType<>(NBTModifiable::setNBTValue, "nbtcompound", "compound");
-
+	
 	/**
 	 * An NBTBase type. Represents a JSON Array in the NBT structure
 	 */
@@ -85,7 +85,7 @@ public final class NBTDataType<T> {
 		this.friendlyNames = friendlyNames;
 		DATA_TYPES.add(this);
 	}
-
+	
 	/**
 	 * Get the friendly names, or aliases, that refer to this constant
 	 * 

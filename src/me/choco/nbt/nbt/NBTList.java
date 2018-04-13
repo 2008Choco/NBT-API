@@ -86,7 +86,6 @@ public interface NBTList extends NBTBase {
 	 */
 	public NBTList addNBTCompound(NBTCompound value);
 	
-	
 	/**
 	 * Get an NBTCompound from this NBT list at the given index
 	 * 
@@ -102,7 +101,6 @@ public interface NBTList extends NBTBase {
 	 * @return modifiable context. Chain methods
 	 */
 	public NBTList addNBTValue(NBTBase value);
-	
 	
 	/**
 	 * Get an NBT value from this NBT list at the given index
